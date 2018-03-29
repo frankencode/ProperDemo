@@ -1,0 +1,19 @@
+#pragma once
+
+#include <cc/ui/Column>
+
+namespace qh {
+
+using namespace cc;
+using namespace cc::ui;
+
+class CodeSnippet: public Column
+{
+public:
+    static Ref<CodeSnippet> create(View *parent, String text);
+
+private:
+    CodeSnippet(View *parent, String text);
+};
+
+} // namespace qh

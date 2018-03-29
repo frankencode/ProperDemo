@@ -1,0 +1,4 @@
+Application {
+    name: properDemo
+    use: [ cc/core, cc/ui, cc/toki, qh ]
+}

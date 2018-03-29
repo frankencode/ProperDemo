@@ -1,0 +1,37 @@
+#pragma once
+
+#include <cc/ui/View>
+#include <cc/ui/TextStyle>
+#include <qh/CodeChunk>
+
+namespace cc { namespace ui { class TextRun; }}
+
+namespace qh {
+
+using namespace cc;
+using namespace cc::ui;
+
+class CodeLine: public View
+{
+public:
+    static Ref<CodeLine> create(View *parent, String text);
+
+    Property<String> text;
+    Property< Ref<const TextStyle> > textStyle;
+    Property< Ref<const TextStyle> > boldTextStyle;
+    Property<Size> margin;
+
+protected:
+    CodeLine(View *parent, String text);
+
+    void updateHighlight();
+    void updateLayout();
+    void updateSize();
+
+    void paint() override;
+
+    Ref<CodeChunks> codeChunks_;
+    Ref<TextRun> textRun_;
+};
+
+} // namespace qh

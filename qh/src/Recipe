@@ -1,0 +1,4 @@
+Library {
+    name: qh
+    use: [ cc/core, cc/ui, cc/syntax, cc/glob, cc/meta, cc/toki ]
+}

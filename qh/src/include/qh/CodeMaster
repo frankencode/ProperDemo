@@ -1,0 +1,28 @@
+#pragma once
+
+#include <cc/toki/Theme>
+#include <cc/toki/Language>
+
+namespace cc { template<class> class Singleton; }
+
+namespace qh {
+
+using namespace cc;
+
+class CodeMaster: public Object
+{
+public:
+    static const CodeMaster *instance();
+
+    toki::Language *language() const { return language_; }
+    toki::Theme *theme() const { return theme_; }
+
+private:
+    friend class Singleton<CodeMaster>;
+    CodeMaster();
+
+    Ref<toki::Language> language_;
+    Ref<toki::Theme> theme_;
+};
+
+} // namespace qh

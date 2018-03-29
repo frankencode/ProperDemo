@@ -1,0 +1,30 @@
+#pragma once
+
+#include <cc/String>
+#include <cc/toki/Theme>
+#include <cc/syntax/Token>
+#include <qh/CodeChunk>
+
+namespace qh {
+
+using namespace cc;
+using namespace cc::syntax;
+
+class CodeScreen: public Object, public TokenScreen
+{
+public:
+    static Ref<CodeScreen> create(String text, String theme = "ClassicWhite");
+
+    bool project(Token *token, int i0, int i1) override;
+
+    CodeChunks *chunks() const { return chunks_; }
+
+private:
+    CodeScreen(String text, String theme);
+
+    String text_;
+    Ref<toki::Theme> theme_;
+    Ref<CodeChunks> chunks_;
+};
+
+} // namespace qh

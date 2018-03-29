@@ -1,0 +1,31 @@
+#pragma once
+
+#include <cc/toki/Style>
+
+namespace qh {
+
+using namespace cc;
+
+class CodeChunk: public Object
+{
+public:
+    static Ref<CodeChunk> create(const String &text, const toki::Style *style) {
+        return new CodeChunk(text, style);
+    }
+
+    String text() const { return text_; }
+    const toki::Style *style() const { return style_; }
+
+private:
+    CodeChunk(const String &text, const toki::Style *style):
+        text_(text),
+        style_(style)
+    {}
+
+    String text_;
+    Ref<const toki::Style> style_;
+};
+
+typedef List< Ref<const CodeChunk> > CodeChunks;
+
+} // namespace qh
