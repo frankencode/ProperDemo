@@ -24,8 +24,8 @@ class Slide1: public View
         color = Color{"#FFFFFF"};
 
         Column *box = Column::create(this);
-        box->align = ColumnAlign::Center;
         box->centerInParent();
+        box->align = ColumnAlign::Center;
         Label::create(box, "Property Bindings in C++(>=11)", TextStyle::create(Font::select("Sans", 30 + Application::instance()->textZoom(), Weight::Bold)));
         Label::create(box, "<i>Frank Mertens &lt;frank@cyblogic.de&gt;</i>");
     }
@@ -165,6 +165,55 @@ class Slide6: public View
     }
 };
 
+class Slide7: public View
+{
+    friend class Object;
+
+    Slide7(View *parent):
+        View(parent)
+    {
+        color = Color{"#FFFFFF"};
+
+        Column *box = Column::create(this);
+        box->color = Color{"#FFFFFF"};
+        box->centerInParent();
+
+        Label::create(box, "<b>PERFORMANCE</b>");
+        Label::create(box, "• faster than QML if done right");
+        Label::create(box, "• no JIT, no startup delay");
+        Label::create(box, "• requires a good set API");
+
+        CodeSnippet::create(box,
+            "if ((activeInstance_) && (activeInstance_ != this)) {\n"
+            "    if (activeInstance_->dependencies()->insert(this))\n"
+            "        subscribers()->insert(activeInstance_);\n"
+            "}\n"
+        )->color = Color{"#E0E0E0"};
+    }
+};
+
+class Slide8: public View
+{
+    friend class Object;
+
+    Slide8(View *parent):
+        View(parent)
+    {
+        color = Color{"#FFFFFF"};
+
+        color = Color{"#FFFFFF"};
+
+        Column *box = Column::create(this);
+        box->color = Color{"#FFFFFF"};
+        box->centerInParent();
+        box->align = ColumnAlign::Center;
+
+        Label::create(box, "<b>FIN</b>", TextStyle::create(Font::select("Sans", 30 + Application::instance()->textZoom(), Weight::Bold)));
+        Label::create(box, "C++ source code of this presentation");
+        Label::create(box, "<i>https://github.com/frankencode/ProperDemo</i>");
+    }
+};
+
 class MainView: public SlideView
 {
     friend class Object;
@@ -179,6 +228,8 @@ class MainView: public SlideView
         Object::create<Slide4>(this);
         Object::create<Slide5>(this);
         Object::create<Slide6>(this);
+        Object::create<Slide7>(this);
+        Object::create<Slide8>(this);
 
         easeOn(slideCarrier()->pos, 0.5, easing::Bezier(0.5, -0.4, 0.5, 1.4));
 
