@@ -1,13 +1,13 @@
 #pragma once
 
-#include <cc/ui/Column>
+#include <cc/ui/View>
 
 namespace qh {
 
 using namespace cc;
 using namespace cc::ui;
 
-class CodeSnippet: public Column
+class CodeSnippet: public View
 {
     friend class Object;
 

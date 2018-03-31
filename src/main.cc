@@ -4,7 +4,7 @@
 #include <cc/ui/Application>
 #include <cc/ui/SlideView>
 #include <cc/ui/Transition>
-#include <cc/ui/Column>
+#include <cc/ui/ColumnLayout>
 #include <cc/ui/Label>
 #include <cc/ui/Transition>
 #include <cc/ui/Timer>
@@ -23,20 +23,21 @@ class Slide1: public View
     {
         color = Color{"#FFFFFF"};
 
-        Column *box = Column::create(this);
+        View *box = View::create(this);
         box->centerInParent();
-        box->align = ColumnAlign::Center;
+        ColumnLayout::setup(box)->align = ColumnAlign::Center;
         Label::create(box, "Property Bindings in C++(>=11)", TextStyle::create(Font::select("Sans", 30 + Application::instance()->textZoom(), Weight::Bold)));
         Label::create(box, "<i>Frank Mertens &lt;frank@cyblogic.de&gt;</i>");
     }
 };
 
-class Slide2: public View
+class Slide2: public View, public KeyInput
 {
     friend class Object;
 
     Slide2(View *parent):
-        View(parent)
+        View(parent),
+        KeyInput(this)
     {
         color = Color{"#FFFFFF"};
 
@@ -101,9 +102,11 @@ class Slide4: public View
     {
         color = Color{"#FFFFFF"};
 
-        Column *box = Column::create(this);
+        View *box = View::create(this);
         box->color = Color{"#FFFFFF"};
         box->centerInParent();
+
+        ColumnLayout::setup(box);
 
         Label::create(box, "<b>HISTORY</b>");
         Label::create(box, "• explored by Olivier Goffart in 2013");
@@ -111,12 +114,13 @@ class Slide4: public View
     }
 };
 
-class Slide5: public View
+class Slide5: public View, public KeyInput
 {
     friend class Object;
 
     Slide5(View *parent):
-        View(parent)
+        View(parent),
+        KeyInput(this)
     {
         color = Color{"#FFFFFF"};
 
@@ -174,9 +178,11 @@ class Slide7: public View
     {
         color = Color{"#FFFFFF"};
 
-        Column *box = Column::create(this);
+        View *box = View::create(this);
         box->color = Color{"#FFFFFF"};
         box->centerInParent();
+
+        ColumnLayout::setup(box);
 
         Label::create(box, "<b>PERFORMANCE</b>");
         Label::create(box, "• faster than QML if done right");
@@ -192,21 +198,23 @@ class Slide7: public View
     }
 };
 
-class Slide8: public View
+class Slide8: public View, public KeyInput
 {
     friend class Object;
 
     Slide8(View *parent):
-        View(parent)
+        View(parent),
+        KeyInput(this)
     {
         color = Color{"#FFFFFF"};
 
         color = Color{"#FFFFFF"};
 
-        Column *box = Column::create(this);
+        View *box = View::create(this);
         box->color = Color{"#FFFFFF"};
         box->centerInParent();
-        box->align = ColumnAlign::Center;
+
+        ColumnLayout::setup(box)->align = ColumnAlign::Center;
 
         Label::create(box, "<b>FIN</b>", TextStyle::create(Font::select("Sans", 30 + Application::instance()->textZoom(), Weight::Bold)));
         Label::create(box, "C++ source code of this presentation");
@@ -214,11 +222,12 @@ class Slide8: public View
     }
 };
 
-class MainView: public SlideView
+class MainView: public SlideView, public KeyInput
 {
     friend class Object;
 
-    MainView()
+    MainView():
+        KeyInput(this)
     {
         size = Size{1024, 768};
 

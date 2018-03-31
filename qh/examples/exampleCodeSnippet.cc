@@ -1,25 +1,28 @@
 #include <cc/ui/Application>
-#include <cc/ui/Row>
 #include <cc/ui/StylePlugin>
 #include <cc/ui/Label>
+#include <cc/ui/RowLayout>
 #include <qh/CodeSnippet>
 
 using namespace cc;
 using namespace cc::ui;
 using namespace qh;
 
-class MainView: public View
+class MainView: public View, public KeyInput
 {
     friend class Object;
 
-    MainView()
+    MainView():
+        KeyInput(this)
     {
         size = Size{640, 480};
         color = Color{"#FFFFFF"};
 
-        Row *box = Row::create(this);
+        View *box = View::create(this);
         box->color = Color{"#F0F0F0"};
         box->centerInParent();
+
+        RowLayout::setup(box);
 
         CodeSnippet::create(box,
             "int main(int argc, char **argv)\n"

@@ -1,3 +1,4 @@
+#include <cc/ui/ColumnLayout>
 #include <qh/CodeLine>
 #include <qh/CodeSnippet>
 
@@ -9,8 +10,10 @@ Ref<CodeSnippet> CodeSnippet::create(View *parent, String text)
 }
 
 CodeSnippet::CodeSnippet(View *parent, String text):
-    Column(parent)
+    View(parent)
 {
+    ColumnLayout::setup(this);
+
     Ref<StringList> lines = text->split("\n");
     for (String line: lines)
         CodeLine::create(this, line);
