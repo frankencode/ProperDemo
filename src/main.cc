@@ -245,10 +245,10 @@ class MainView: public SlideView
             }
             else if (+(key()->modifiers() & KeyModifier::Control)) {
                 if (key()->keyCode() == '+') {
-                    Application::instance()->textZoom += 4;
+                    Application::instance()->textZoom += 2;
                 }
                 else if (key()->keyCode() == '-') {
-                    Application::instance()->textZoom -= 4;
+                    Application::instance()->textZoom -= 2;
                 }
             }
         });
@@ -258,7 +258,7 @@ class MainView: public SlideView
 int main(int argc, char **argv)
 {
     Application *app = Application::open(argc, argv);
-    app->textZoom = 8;
+    app->textZoom = 10;
     Window::open(Object::create<MainView>(), "Hello, world!", WindowMode::Default|WindowMode::Accelerated);
     return app->run();
 }

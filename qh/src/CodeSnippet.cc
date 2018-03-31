@@ -5,7 +5,7 @@ namespace qh {
 
 Ref<CodeSnippet> CodeSnippet::create(View *parent, String text)
 {
-    return fly(new CodeSnippet(parent, text));
+    return Object::create<CodeSnippet>(parent, text);
 }
 
 CodeSnippet::CodeSnippet(View *parent, String text):

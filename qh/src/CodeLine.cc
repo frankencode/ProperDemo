@@ -13,7 +13,7 @@ using namespace cc::syntax;
 
 Ref<CodeLine> CodeLine::create(View *parent, String text)
 {
-    return fly(new CodeLine(parent, text));
+    return Object::create<CodeLine>(parent, text);
 }
 
 CodeLine::CodeLine(View *parent, String text_):

@@ -9,6 +9,8 @@ using namespace cc::ui;
 
 class CodeSnippet: public Column
 {
+    friend class Object;
+
 public:
     static Ref<CodeSnippet> create(View *parent, String text);
 

@@ -13,6 +13,8 @@ using namespace cc::ui;
 
 class CodeLine: public View
 {
+    friend class Object;
+
 public:
     static Ref<CodeLine> create(View *parent, String text);
 
