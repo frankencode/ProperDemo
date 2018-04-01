@@ -8,12 +8,11 @@ using namespace cc;
 using namespace cc::ui;
 using namespace qh;
 
-class MainView: public View, public KeyInput
+class MainView: public View
 {
     friend class Object;
 
-    MainView():
-        KeyInput(this)
+    MainView()
     {
         size = Size{640, 480};
         color = Color{"#FFFFFF"};
@@ -31,17 +30,21 @@ class MainView: public View, public KeyInput
             "   return 0;\n"
             "}"
         );
+    }
 
-        keyPressed->connect([=]{
-            if (+(key()->modifiers() & KeyModifier::Control)) {
-                if (key()->keyCode() == '+') {
-                    Application::instance()->textZoom += 4;
-                }
-                else if (key()->keyCode() == '-') {
-                    Application::instance()->textZoom -= 4;
-                }
-            }
-        });
+    bool hasKeyInput() const { return true; }
+
+    bool onKeyPressed(const KeyEvent *event)
+    {
+        if (+(event->modifiers() & KeyModifier::Control))
+        {
+            if (event->keyCode() == '+')
+                Application::instance()->textZoom += 4;
+            else if (event->keyCode() == '-')
+                Application::instance()->textZoom -= 4;
+        }
+
+        return true;
     }
 };
 

@@ -31,41 +31,50 @@ class Slide1: public View
     }
 };
 
-class Slide2: public View, public KeyInput
+class Slide2: public View
 {
     friend class Object;
 
     Slide2(View *parent):
-        View(parent),
-        KeyInput(this)
+        View(parent)
     {
         color = Color{"#FFFFFF"};
 
-        Label *label = Label::create(this, "MUC++", TextStyle::create(Font::select("Mono", 100 + Application::instance()->textZoom(), Weight::Bold)));
-        label->centerInParent();
+        label_ = Label::create(this, "MUC++", TextStyle::create(Font::select("Mono", 100 + Application::instance()->textZoom(), Weight::Bold)));
+        label_->centerInParent();
 
-        easeOn(label->pos, 1, easing::outBounce);
-
-        keyPressed->connect([=]{
-            if (key()->scanCode() == ScanCode::Key_Space) {
-                if (mapToGlobal(Point{}) != Point{}) return;
-                if (!done_) {
-                    label->pos->bind([=]{
-                        return Point{
-                            0.5 * (size()[0] - label->size()[0]),
-                            size()[1] - label->size()[1]
-                        };
-                    });
-                    done_ = true;
-                }
-                else {
-                    label->centerInParent();
-                    done_ = false;
-                }
-            }
-        });
+        easeOn(label_->pos, 1, easing::outBounce);
     }
 
+    bool hasKeyInput() const override { return true; }
+
+    bool onKeyPressed(const KeyEvent *event)
+    {
+        if (event->scanCode() == ScanCode::Key_Space)
+        {
+            if (mapToGlobal(Point{}) != Point{}) return false;
+
+            if (!done_) {
+                label_->pos->bind([=]{
+                    return Point{
+                        0.5 * (size()[0] - label_->size()[0]),
+                        size()[1] - label_->size()[1]
+                    };
+                });
+                done_ = true;
+            }
+            else {
+                label_->centerInParent();
+                done_ = false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    Label *label_ { nullptr };
     bool done_ { false };
 };
 
@@ -114,34 +123,44 @@ class Slide4: public View
     }
 };
 
-class Slide5: public View, public KeyInput
+class Slide5: public View
 {
     friend class Object;
 
     Slide5(View *parent):
-        View(parent),
-        KeyInput(this)
+        View(parent)
     {
         color = Color{"#FFFFFF"};
 
-        auto getClockText = []{
-            Ref<const Date> date = Date::breakdown(System::now());
-            return dec(date->hour(), 2) + "∶" + dec(date->minutes(), 2) + "∶" + dec(date->seconds(), 2);
-        };
+        label_ = Label::create(this, getClockText());
+        label_->color = Color{"#D0D0FF"};
+        label_->centerInParent();
 
-        Label *label = Label::create(this, getClockText());
-        label->color = Color{"#D0D0FF"};
-        label->centerInParent();
-
-        easeOn(label->angle, 0.5, easing::Bezier(0.5, -0.4, 0.5, 1.4));
-
-        keyPressed->connect([=]{
-            if (key()->scanCode() == ScanCode::Key_Space) {
-                if (mapToGlobal(Point{}) != Point{}) return;
-                Timer::start(1, [=]{ label->text = getClockText(); label->angle += 45; });
-            }
-        });
+        easeOn(label_->angle, 0.5, easing::Bezier(0.5, -0.4, 0.5, 1.4));
     }
+
+    String getClockText() const
+    {
+        Ref<const Date> date = Date::breakdown(System::now());
+        return dec(date->hour(), 2) + "∶" + dec(date->minutes(), 2) + "∶" + dec(date->seconds(), 2);
+    }
+
+    bool hasKeyInput() const override { return true; }
+
+    bool onKeyPressed(const KeyEvent *event)
+    {
+        if (event->scanCode() == ScanCode::Key_Space)
+        {
+            if (mapToGlobal(Point{}) != Point{}) return false;
+
+            Timer::start(1, [=]{ label_->text = getClockText(); label_->angle += 45; });
+            return true;
+        }
+
+        return false;
+    }
+
+    Label *label_ { nullptr };
 };
 
 class Slide6: public View
@@ -198,13 +217,12 @@ class Slide7: public View
     }
 };
 
-class Slide8: public View, public KeyInput
+class Slide8: public View
 {
     friend class Object;
 
     Slide8(View *parent):
-        View(parent),
-        KeyInput(this)
+        View(parent)
     {
         color = Color{"#FFFFFF"};
 
@@ -222,12 +240,11 @@ class Slide8: public View, public KeyInput
     }
 };
 
-class MainView: public SlideView, public KeyInput
+class MainView: public SlideView
 {
     friend class Object;
 
-    MainView():
-        KeyInput(this)
+    MainView()
     {
         size = Size{1024, 768};
 
@@ -241,26 +258,37 @@ class MainView: public SlideView, public KeyInput
         Object::create<Slide8>(this);
 
         easeOn(slideCarrier()->pos, 0.5, easing::Bezier(0.5, -0.4, 0.5, 1.4));
+    }
 
-        keyPressed->connect([=]{
-            if (key()->scanCode() == ScanCode::Key_Left) {
-                currentIndex -= 1;
+    bool hasKeyInput() const override { return true; }
+
+    bool onKeyPressed(const KeyEvent *event)
+    {
+        if (event->scanCode() == ScanCode::Key_Left)
+        {
+            currentIndex -= 1;
+        }
+        else if (event->scanCode() == ScanCode::Key_Right)
+        {
+            currentIndex += 1;
+        }
+        else if ('0' <= +event->keyCode() && +event->keyCode() <= '9')
+        {
+            currentIndex = +event->keyCode() - '1' + 10 * (+event->keyCode() == '0');
+        }
+        else if (+(event->modifiers() & KeyModifier::Control))
+        {
+            if (event->keyCode() == '+') {
+                Application::instance()->textZoom += 2;
             }
-            else if (key()->scanCode() == ScanCode::Key_Right) {
-                currentIndex += 1;
+            else if (event->keyCode() == '-') {
+                Application::instance()->textZoom -= 2;
             }
-            else if ('0' <= +key()->keyCode() && +key()->keyCode() <= '9') {
-                currentIndex = +key()->keyCode() - '1' + 10 * (+key()->keyCode() == '0');
-            }
-            else if (+(key()->modifiers() & KeyModifier::Control)) {
-                if (key()->keyCode() == '+') {
-                    Application::instance()->textZoom += 2;
-                }
-                else if (key()->keyCode() == '-') {
-                    Application::instance()->textZoom -= 2;
-                }
-            }
-        });
+        }
+        else
+            return false;
+
+        return true;
     }
 };
 
