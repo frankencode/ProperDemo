@@ -19,18 +19,17 @@ Ref<CodeLine> CodeLine::create(View *parent, String text)
 CodeLine::CodeLine(View *parent, String text_):
     View(parent),
     text(text_),
-    textStyle(alias(StylePlugin::instance()->defaultMonoTextStyle)),
-    boldTextStyle(alias(StylePlugin::instance()->defaultMonoBoldTextStyle)),
-    margin(alias(StylePlugin::instance()->defaultTextMargin))
+    margin(style()->defaultMargin())
 {
+    font->bind([=]{ return (Font() << Pitch::Fixed) * app()->textZoom(); });
     color = transparent;
 
     updateHighlight();
 
-    text     ->connect([=]{ updateHighlight(); });
-    textStyle->connect([=]{ updateLayout(); });
-    margin   ->connect([=]{ updateSize(); });
-    size     ->connect([=]{ update(); });
+    text  ->connect([=]{ updateHighlight(); });
+    font  ->connect([=]{ updateLayout(); });
+    margin->connect([=]{ updateSize(); });
+    size  ->connect([=]{ update(); });
 }
 
 void CodeLine::updateHighlight()
@@ -56,28 +55,25 @@ void CodeLine::updateLayout()
         for (const CodeChunk *chunk: codeChunks_) {
             const toki::Style *style = chunk->style();
             if (style) {
-                textRun_->append(
-                    chunk->text(),
-                    TextStyle::create(
-                        style->bold() ? boldTextStyle()->font() : textStyle()->font(),
-                        style->ink()
-                    )
-                );
+                Font f = font();
+                if (style->bold()) f->setWeight(Weight::Bold);
+                if (style->ink()) f->setColor(style->ink());
+                textRun_->append(chunk->text(), f);
             }
             else
-                textRun_->append(chunk->text(), textStyle());
+                textRun_->append(chunk->text(), font());
         }
     }
     else
-        textRun_->append(text(), textStyle());
+        textRun_->append(text(), font());
 
     updateSize();
-    update();
 }
 
 void CodeLine::updateSize()
 {
     size = textRun_->size() + 2 * margin();
+    update();
 }
 
 void CodeLine::paint()

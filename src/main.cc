@@ -26,8 +26,8 @@ class Slide1: public View
         View *box = View::create(this);
         box->centerInParent();
         ColumnLayout::setup(box)->align = ColumnAlign::Center;
-        Label::create(box, "Property Bindings in C++(>=11)", TextStyle::create(Font::select("Sans", 30 + Application::instance()->textZoom(), Weight::Bold)));
-        Label::create(box, "<i>Frank Mertens &lt;frank@cyblogic.de&gt;</i>");
+        Label::create(box, "Property Bindings in C++(>=11)", (Font() * 1.5) << Weight::Bold);
+        Label::create(box, "Frank Mertens &lt;frank@cyblogic.de&gt;", Font() << Slant::Italic);
     }
 };
 
@@ -40,7 +40,7 @@ class Slide2: public View
     {
         color = Color{"#FFFFFF"};
 
-        label_ = Label::create(this, "MUC++", TextStyle::create(Font::select("Mono", 100 + Application::instance()->textZoom(), Weight::Bold)));
+        label_ = Label::create(this, "MUC++", (Font() * 4) << Weight::Bold);
         label_->centerInParent();
 
         easeOn(label_->pos, 1, easing::outBounce);
@@ -132,7 +132,7 @@ class Slide5: public View
     {
         color = Color{"#FFFFFF"};
 
-        label_ = Label::create(this, getClockText());
+        label_ = Label::create(this, getClockText(), Font() * 2);
         label_->color = Color{"#D0D0FF"};
         label_->centerInParent();
 
@@ -234,7 +234,7 @@ class Slide8: public View
 
         ColumnLayout::setup(box)->align = ColumnAlign::Center;
 
-        Label::create(box, "<b>FIN</b>", TextStyle::create(Font::select("Sans", 30 + Application::instance()->textZoom(), Weight::Bold)));
+        Label::create(box, "<b>FIN</b>", Font(30) << Weight::Bold);
         Label::create(box, "C++ source code of this presentation");
         Label::create(box, "<i>https://github.com/frankencode/ProperDemo</i>");
     }
@@ -279,10 +279,10 @@ class MainView: public SlideView
         else if (+(event->modifiers() & KeyModifier::Control))
         {
             if (event->keyCode() == '+') {
-                Application::instance()->textZoom += 2;
+                Application::instance()->textZoom += 0.1;
             }
             else if (event->keyCode() == '-') {
-                Application::instance()->textZoom -= 2;
+                Application::instance()->textZoom -= 0.1;
             }
         }
         else
@@ -295,7 +295,7 @@ class MainView: public SlideView
 int main(int argc, char **argv)
 {
     Application *app = Application::open(argc, argv);
-    app->textZoom = 10;
+    app->textZoom = 1.5;
     Window::open(Object::create<MainView>(), "Hello, world!", WindowMode::Default|WindowMode::Accelerated);
     return app->run();
 }

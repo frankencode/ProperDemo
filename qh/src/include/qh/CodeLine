@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cc/ui/View>
-#include <cc/ui/TextStyle>
+#include <cc/ui/Font>
 #include <qh/CodeChunk>
 
 namespace cc { namespace ui { class TextRun; }}
@@ -19,8 +19,7 @@ public:
     static Ref<CodeLine> create(View *parent, String text);
 
     Property<String> text;
-    Property< Ref<const TextStyle> > textStyle;
-    Property< Ref<const TextStyle> > boldTextStyle;
+    Property<Font> font;
     Property<Size> margin;
 
 protected:
